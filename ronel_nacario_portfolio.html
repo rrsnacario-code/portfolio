@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ronel Roy S. Nacario — ECE Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1318;
+    --bg3: #111820;
+    --accent: #00e5a0;
+    --accent2: #00b8ff;
+    --accent3: #ff6b35;
+    --text: #e8edf2;
+    --text2: #8a9baa;
+    --text3: #4a5c6a;
+    --border: rgba(0,229,160,0.15);
+    --border2: rgba(0,184,255,0.12);
+    --glow: 0 0 20px rgba(0,229,160,0.2);
+    --glow2: 0 0 20px rgba(0,184,255,0.2);
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; z-index: 9999;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,229,160,0.5);
+    border-radius: 50%;
+    position: fixed; z-index: 9998;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.25s, height 0.25s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .nav-logo span { color: var(--text2); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--accent);
+    transform: scaleX(0); transition: transform 0.25s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  canvas#circuit {
+    position: absolute; inset: 0;
+    opacity: 0.35;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .hero-name {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+  }
+  .hero-name .line2 { color: var(--accent); }
+  .hero-name .line3 { color: var(--text2); }
+
+  .hero-desc {
+    margin-top: 2.5rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text2);
+    line-height: 1.9;
+    max-width: 520px;
+    position: relative; z-index: 1;
+    border-left: 2px solid var(--accent);
+    padding-left: 1.25rem;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex; gap: 1rem;
+    position: relative; z-index: 1;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.8rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.25s;
+    cursor: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #fff; box-shadow: var(--glow); }
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--text2);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Oscilloscope bar */
+  .osc-bar {
+    width: 100%;
+    height: 80px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+  canvas#osc { width: 100%; height: 100%; }
+
+  /* Section layout */
+  section {
+    padding: 6rem 3rem;
+    position: relative;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before {
+    content: '//';
+    color: var(--text3);
+  }
+  .section-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: var(--text);
+    margin-bottom: 3rem;
+    letter-spacing: -0.02em;
+  }
+  .section-title em { color: var(--accent); font-style: normal; }
+
+  /* Skills grid */
+  .skills-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+  }
+  .skill-block {
+    background: var(--bg2);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+  .skill-block:hover { background: var(--bg3); }
+  .skill-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .skill-block:hover::before { opacity: 1; }
+  .skill-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .skill-block h3 {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .skill-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(0,229,160,0.07);
+    border: 1px solid rgba(0,229,160,0.2);
+    color: var(--text2);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+  .tag.blue {
+    background: rgba(0,184,255,0.07);
+    border-color: rgba(0,184,255,0.2);
+  }
+  .tag.orange {
+    background: rgba(255,107,53,0.07);
+    border-color: rgba(255,107,53,0.2);
+  }
+
+  /* Projects */
+  .projects-list { display: flex; flex-direction: column; gap: 1.5px; background: var(--border); }
+  .project-item {
+    background: var(--bg2);
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-item::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.25s;
+    transform-origin: bottom;
+  }
+  .project-item:hover { background: var(--bg3); }
+  .project-item:hover::after { transform: scaleY(1); }
+  .project-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+    min-width: 32px;
+  }
+  .project-content h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .project-content p {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .project-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+
+  /* Experience */
+  .exp-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    max-width: 700px;
+  }
+  .exp-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+  }
+  .exp-role {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+  .exp-org {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .exp-period {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    margin-bottom: 1.5rem;
+  }
+  .exp-duties { list-style: none; }
+  .exp-duties li {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text2);
+    line-height: 1.8;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    display: flex; gap: 0.75rem;
+  }
+  .exp-duties li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+  /* Certifications */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .cert-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    padding: 1.5rem;
+    border-radius: 2px;
+    display: flex; gap: 1rem; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .cert-card:hover { border-color: rgba(0,184,255,0.4); }
+  .cert-icon {
+    width: 36px; height: 36px;
+    background: rgba(0,184,255,0.1);
+    border: 1px solid rgba(0,184,255,0.25);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    font-family: var(--mono);
+    font-weight: 700;
+  }
+  .cert-card h4 {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+  .cert-card span {
+    font-size: 0.65rem;
+    color: var(--accent2);
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Education */
+  .edu-block {
+    display: grid; grid-template-columns: 3px 1fr;
+    gap: 2rem;
+  }
+  .edu-line { background: linear-gradient(180deg, var(--accent), transparent); }
+  .edu-content {}
+  .edu-degree {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+  .edu-school {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+  }
+  .edu-meta {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text3);
+    margin-bottom: 1.5rem;
+  }
+  .achievement-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .achievement {
+    display: flex; align-items: center; gap: 1rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text2);
+  }
+  .achievement::before {
+    content: '★';
+    color: #f5c518;
+    font-size: 0.7rem;
+  }
+
+  /* Contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    background: var(--border);
+    max-width: 600px;
+  }
+  .contact-item {
+    background: var(--bg2);
+    padding: 1.75rem;
+    transition: background 0.2s;
+  }
+  .contact-item:hover { background: var(--bg3); }
+  .contact-item label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text3);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .contact-item a, .contact-item span {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .contact-item a:hover { color: var(--text); }
+
+  /* Footer */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer p {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  footer span { color: var(--accent); }
+
+  /* Status indicator */
+  .status-dot {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .status-dot::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* Animations */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 3rem;
+  }
+
+  /* Grid backgrounds */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 0 1.5rem; }
+    .hero-name { font-size: 3rem; }
+    .project-item { grid-template-columns: 1fr; }
+    .project-tags { flex-direction: row; align-items: flex-start; }
+    .contact-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .divider { margin: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">RRN <span>/ ECE</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="about">
+  <canvas id="circuit"></canvas>
+  <div style="position:relative;z-index:1">
+    <div class="hero-tag">
+      <span class="status-dot">Available for Internship</span>
+    </div>
+    <h1 class="hero-name">
+      <div>RONEL</div>
+      <div class="line2">ROY</div>
+      <div class="line3">NACARIO</div>
+    </h1>
+    <p class="hero-desc">
+      4th-year Electronics Engineering student @ Adventist University of the Philippines.<br>
+      Specializing in embedded systems, computer vision, AI-driven applications, and hardware-software integration.<br>
+      Building smart systems that bridge the physical and digital world.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- Oscilloscope divider -->
+<div class="osc-bar">
+  <canvas id="osc"></canvas>
+</div>
+
+<!-- Skills -->
+<section id="skills" class="grid-bg fade-in">
+  <div class="section-label">Technical Stack</div>
+  <h2 class="section-title">What I <em>Build With</em></h2>
+
+  <div class="skills-wrapper">
+    <div class="skill-block">
+      <div class="skill-icon">⚡</div>
+      <h3>Electronics & Signal Processing</h3>
+      <p style="font-family:var(--mono);font-size:0.7rem;color:var(--text2);line-height:1.7">
+        Digital Signal Processing, Logic Circuits, Circuit Analysis — the fundamentals that power everything.
+      </p>
+      <div class="skill-tags">
+        <span class="tag">DSP</span>
+        <span class="tag">Logic Design</span>
+        <span class="tag">Circuit Analysis</span>
+        <span class="tag">LTSpice</span>
+        <span class="tag">NI Multisim</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-icon">🤖</div>
+      <h3>AI & Machine Learning</h3>
+      <p style="font-family:var(--mono);font-size:0.7rem;color:var(--text2);line-height:1.7">
+        From CNNs for computer vision to fuzzy logic and genetic algorithms — intelligent systems design.
+      </p>
+      <div class="skill-tags">
+        <span class="tag blue">Python</span>
+        <span class="tag blue">Machine Learning</span>
+        <span class="tag blue">Deep Learning</span>
+        <span class="tag blue">CNN</span>
+        <span class="tag blue">Computer Vision</span>
+        <span class="tag blue">Fuzzy Logic</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-icon">🔌</div>
+      <h3>Embedded & Simulation</h3>
+      <p style="font-family:var(--mono);font-size:0.7rem;color:var(--text2);line-height:1.7">
+        Microcontrollers, simulation tools, and PLC programming for real-world hardware solutions.
+      </p>
+      <div class="skill-tags">
+        <span class="tag">Arduino IDE</span>
+        <span class="tag">MATLAB</span>
+        <span class="tag">WPLSoft</span>
+        <span class="tag">AutoCAD</span>
+        <span class="tag">Cisco Packet Tracer</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-icon">🌐</div>
+      <h3>Networking & IoT</h3>
+      <p style="font-family:var(--mono);font-size:0.7rem;color:var(--text2);line-height:1.7">
+        Cisco-certified in network design, IoT fundamentals, and digital transformation systems.
+      </p>
+      <div class="skill-tags">
+        <span class="tag orange">Cisco Networking</span>
+        <span class="tag orange">IoT</span>
+        <span class="tag orange">Network Security</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-icon">🎬</div>
+      <h3>Multimedia & Production</h3>
+      <p style="font-family:var(--mono);font-size:0.7rem;color:var(--text2);line-height:1.7">
+        Professional live broadcast, video editing, and multimedia systems from years of real-world ops.
+      </p>
+      <div class="skill-tags">
+        <span class="tag">OBS</span>
+        <span class="tag">vMix</span>
+        <span class="tag">Adobe Premiere</span>
+        <span class="tag">Audition</span>
+        <span class="tag">Photoshop</span>
+        <span class="tag">Illustrator</span>
+      </div>
+    </div>
+    <div class="skill-block">
+      <div class="skill-icon">🔥</div>
+      <h3>Systems Installation</h3>
+      <p style="font-family:var(--mono);font-size:0.7rem;color:var(--text2);line-height:1.7">
+        Hands-on deployment of FDAS, solar power, CCTV, and surveillance systems in real environments.
+      </p>
+      <div class="skill-tags">
+        <span class="tag">FDAS</span>
+        <span class="tag">Solar PV</span>
+        <span class="tag">CCTV</span>
+        <span class="tag">DVR/NVR</span>
+        <span class="tag">Hikvision</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Projects -->
+<section id="projects" class="fade-in">
+  <div class="section-label">Selected Work</div>
+  <h2 class="section-title">Projects & <em>Deployments</em></h2>
+
+  <div class="projects-list">
+    <div class="project-item">
+      <div class="project-num">01</div>
+      <div class="project-content">
+        <h3>Smart Pedestrian Detection System for Dynamic Traffic Signal Control</h3>
+        <p>Led the design of a computer vision-based system using image processing and recognition techniques for real-time pedestrian detection. Enabled dynamic traffic signal timing based on pedestrian presence — improving road safety and traffic flow efficiency. Served as Team Leader at AUP (2024).</p>
+      </div>
+      <div class="project-tags">
+        <span class="tag blue">Computer Vision</span>
+        <span class="tag blue">CNN</span>
+        <span class="tag blue">Python</span>
+        <span class="tag">Team Lead</span>
+      </div>
+    </div>
+    <div class="project-item">
+      <div class="project-num">02</div>
+      <div class="project-content">
+        <h3>4-Zone Conventional FDAS Wall Trainer — AUP ECE Lab</h3>
+        <p>Installed and configured a 4-zone conventional Fire Detection and Alarm System for ECE laboratory training use. Wired all zone circuits, control panel, detectors, and alarm devices with full safety compliance for educational demonstration purposes.</p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">FDAS</span>
+        <span class="tag">Systems Wiring</span>
+        <span class="tag orange">Safety</span>
+      </div>
+    </div>
+    <div class="project-item">
+      <div class="project-num">03</div>
+      <div class="project-content">
+        <h3>Addressable FDAS Installation — AUP ECE Lab</h3>
+        <p>Installed an advanced addressable Fire Detection and Alarm System. Configured addressable loop circuits, control panel programming, and device addressing per node. Delivered a fully working system for students to learn modern addressable FDAS architecture and diagnostics.</p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Addressable FDAS</span>
+        <span class="tag">Control Panel</span>
+        <span class="tag orange">Loop Circuits</span>
+      </div>
+    </div>
+    <div class="project-item">
+      <div class="project-num">04</div>
+      <div class="project-content">
+        <h3>Residential Solar Power Systems × 3 Installations</h3>
+        <p>Designed and deployed complete off-grid/hybrid solar power systems across three residential sites in Laguna, Cavite, and Batangas. Covered panel array mounting, battery bank integration, inverter and charge controller setup, system commissioning, and client walkthroughs.</p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Solar PV</span>
+        <span class="tag">Battery Systems</span>
+        <span class="tag">Off-Grid</span>
+        <span class="tag orange">3 Sites</span>
+      </div>
+    </div>
+    <div class="project-item">
+      <div class="project-num">05</div>
+      <div class="project-content">
+        <h3>6-Camera Hikvision IP CCTV System — AUP ECE Department</h3>
+        <p>Installed and configured 6 Hikvision IP cameras for the ECE department laboratory. Managed cable routing, optimized camera positioning for full coverage, and configured NVR with network settings for remote monitoring of the facility.</p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Hikvision</span>
+        <span class="tag">IP CCTV</span>
+        <span class="tag">NVR</span>
+        <span class="tag blue">Networking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Experience -->
+<section id="experience" class="fade-in">
+  <div class="section-label">Work History</div>
+  <h2 class="section-title">Real-World <em>Experience</em></h2>
+
+  <div class="exp-card">
+    <div class="exp-role">Technical Staff (Volunteer)</div>
+    <div class="exp-org">Northeast Luzon Adventist College</div>
+    <div class="exp-period">Apr 2020 – Jul 2022 · 2 years 4 months</div>
+    <ul class="exp-duties">
+      <li>Provided technical support for live video streaming, production, and post-production across campus events.</li>
+      <li>Operated live broadcast systems using OBS, vMix, and EasyWorship for large-scale streaming.</li>
+      <li>Handled video editing and audio processing in Adobe Premiere Pro and Adobe Audition.</li>
+      <li>Assisted in multimedia system setup, on-site troubleshooting, and full event operations management.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Education -->
+<section id="education" class="fade-in">
+  <div class="section-label">Academic Background</div>
+  <h2 class="section-title">Education & <em>Achievements</em></h2>
+
+  <div class="edu-block">
+    <div class="edu-line"></div>
+    <div class="edu-content">
+      <div class="edu-degree">BS Electronics Engineering</div>
+      <div class="edu-school">Adventist University of the Philippines</div>
+      <div class="edu-meta">Cavite, Philippines · 2022 – Present (4th Year)</div>
+      <div class="achievement-list">
+        <div class="achievement">Elite Electronics Showdown 2024 — Quizzer, Regional Level</div>
+        <div class="achievement">Elite Electronics Showdown 2025 — Quizzer, Regional Level</div>
+        <div class="achievement">Interscholastic Quiz Show 2025 — Quizzer, Regional & National Level</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Certifications -->
+<section id="certifications" class="fade-in">
+  <div class="section-label">Credentials</div>
+  <h2 class="section-title">Cisco <em>Certifications</em></h2>
+
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-icon">CN</div>
+      <div>
+        <span>Cisco Networking Academy</span>
+        <h4>Networking Basics</h4>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">NS</div>
+      <div>
+        <span>Cisco Networking Academy</span>
+        <h4>Network Support and Security</h4>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">NA</div>
+      <div>
+        <span>Cisco Networking Academy</span>
+        <h4>Network Addressing & Basic Troubleshooting</h4>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">ND</div>
+      <div>
+        <span>Cisco Networking Academy</span>
+        <h4>Networking Devices and Initial Configuration</h4>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">NT</div>
+      <div>
+        <span>Cisco Networking Academy</span>
+        <h4>Network Technician Career Path Exam</h4>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">IoT</div>
+      <div>
+        <span>Cisco Networking Academy</span>
+        <h4>Introduction to IoT and Digital Transformation</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Contact -->
+<section id="contact" class="fade-in">
+  <div class="section-label">Let's Connect</div>
+  <h2 class="section-title">Get in <em>Touch</em></h2>
+  <p style="font-family:var(--mono);font-size:0.78rem;color:var(--text2);max-width:480px;line-height:1.9;margin-bottom:2.5rem">
+    Open to internship opportunities in electronics engineering, embedded systems, automation, or AI-driven applications. Based in Silang, Cavite, Philippines.
+  </p>
+
+  <div class="contact-grid">
+    <div class="contact-item">
+      <label>Phone</label>
+      <span>0965 553 1724</span>
+    </div>
+    <div class="contact-item">
+      <label>Email</label>
+      <a href="mailto:2057162@aup.edu.ph">2057162@aup.edu.ph</a>
+    </div>
+    <div class="contact-item">
+      <label>LinkedIn</label>
+      <a href="https://linkedin.com/in/ronel-roy-s-nacario" target="_blank">ronel-roy-s-nacario</a>
+    </div>
+    <div class="contact-item">
+      <label>Location</label>
+      <span>Silang, Cavite, PH</span>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 <span>Ronel Roy S. Nacario</span> — BS Electronics Engineering</p>
+  <p style="color:var(--text3)">Built with voltage and ambition.</p>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width='18px'; cursor.style.height='18px'; cursor.style.background='#00b8ff'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width='10px'; cursor.style.height='10px'; cursor.style.background='var(--accent)'; });
+});
+
+// Circuit canvas background
+const cc = document.getElementById('circuit');
+const ctx = cc.getContext('2d');
+function resizeCC() { cc.width = window.innerWidth; cc.height = window.innerHeight; }
+resizeCC();
+window.addEventListener('resize', resizeCC);
+
+const nodes = [];
+for (let i = 0; i < 40; i++) {
+  nodes.push({ x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3 });
+}
+
+function drawCircuit() {
+  ctx.clearRect(0,0,cc.width,cc.height);
+  nodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if(n.x<0||n.x>cc.width) n.vx*=-1;
+    if(n.y<0||n.y>cc.height) n.vy*=-1;
+  });
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i+1; j < nodes.length; j++) {
+      const dx = nodes[j].x - nodes[i].x;
+      const dy = nodes[j].y - nodes[i].y;
+      const d = Math.sqrt(dx*dx+dy*dy);
+      if (d < 180) {
+        ctx.strokeStyle = `rgba(0,229,160,${(1-d/180)*0.3})`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        // Circuit-style path: go horizontal first, then vertical
+        ctx.lineTo(nodes[i].x + dx/2, nodes[i].y);
+        ctx.lineTo(nodes[i].x + dx/2, nodes[j].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.stroke();
+      }
+    }
+    // Dot at node
+    ctx.fillStyle = 'rgba(0,229,160,0.5)';
+    ctx.beginPath();
+    ctx.arc(nodes[i].x, nodes[i].y, 2, 0, Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(drawCircuit);
+}
+drawCircuit();
+
+// Oscilloscope
+const oc = document.getElementById('osc');
+const octx = oc.getContext('2d');
+function resizeOC() { oc.width = oc.offsetWidth; oc.height = oc.offsetHeight; }
+resizeOC();
+window.addEventListener('resize', resizeOC);
+let oscT = 0;
+function drawOsc() {
+  octx.clearRect(0,0,oc.width,oc.height);
+  const h = oc.height, w = oc.width;
+  const mid = h / 2;
+  // Grid lines
+  octx.strokeStyle = 'rgba(0,229,160,0.08)';
+  octx.lineWidth = 0.5;
+  for (let gx = 0; gx < w; gx += 40) {
+    octx.beginPath(); octx.moveTo(gx,0); octx.lineTo(gx,h); octx.stroke();
+  }
+  octx.beginPath(); octx.moveTo(0, mid); octx.lineTo(w, mid); octx.stroke();
+
+  // Signal 1 — green
+  octx.strokeStyle = '#00e5a0';
+  octx.lineWidth = 1.5;
+  octx.shadowBlur = 4;
+  octx.shadowColor = '#00e5a0';
+  octx.beginPath();
+  for (let x = 0; x < w; x++) {
+    const t = (x / w) * Math.PI * 8 + oscT;
+    const y = mid + Math.sin(t) * (mid*0.55) + Math.sin(t*2.3)*8;
+    x === 0 ? octx.moveTo(x,y) : octx.lineTo(x,y);
+  }
+  octx.stroke();
+
+  // Signal 2 — blue (offset)
+  octx.strokeStyle = 'rgba(0,184,255,0.5)';
+  octx.lineWidth = 1;
+  octx.shadowColor = '#00b8ff';
+  octx.beginPath();
+  for (let x = 0; x < w; x++) {
+    const t = (x / w) * Math.PI * 8 + oscT + 1.2;
+    const y = mid + Math.sin(t) * (mid*0.3);
+    x === 0 ? octx.moveTo(x,y) : octx.lineTo(x,y);
+  }
+  octx.stroke();
+  octx.shadowBlur = 0;
+
+  oscT += 0.018;
+  requestAnimationFrame(drawOsc);
+}
+drawOsc();
+
+// Scroll fade-in
+const faders = document.querySelectorAll('.fade-in');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+faders.forEach(f => io.observe(f));
+</script>
+</body>
+</html>
